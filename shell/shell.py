@@ -16,9 +16,9 @@ while True:
 
     if userInput == "":
         continue
-    if 'exit' in userInput:
+    elif 'exit' in userInput:
         break
-    if'cd' in userInput:
+    elif'cd' in userInput:
         dirString = userInput.split()
         if '..' in userInput:
             changeDir = '..'
@@ -29,16 +29,23 @@ while True:
         except FileNotFoundError:
             pass
         continue
+    else:
+        pid = os.getpid()
+        dirString = userInput.split()
+        if pid == 0:
+            if '>' in userInput:
+                os.close(1)
+                sys.stdout = open(dirString[1].strip(),"w")
+                os.set_inheritable(1,True)
+                path(dirString[0].split())
+            elif '<' in userInput:
+                os.close(0)
+                sys.stdout = open(dirString[1].strip(),"r")
+                os.set_inheritable(0, True)
+                path(dirString[0].split())
+            elif '|' in userInput:
+                print("hi")
+                pipe1 = dirString[0].split()
+                pipe2 = dirString[1].split()
 
-    
-    pid = os.getpid()
-    if pid == 0:
-        if '>' in userInput:
-            os.close(1)
-            sys.stdout = open(userInput[1].strip(),"w")
-            os.set_inheritable(1,True)
-            
-    #if command == 'exit':
-    #        break
-    #    if command == 'cd':
-    #        if '..'
+                pr,pw = os.pipe()
